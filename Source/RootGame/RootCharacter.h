@@ -6,6 +6,21 @@
 #include "GameFramework/Character.h"
 #include "RootCharacter.generated.h"
 
+UENUM(BlueprintType)
+enum PlayerGameState
+{
+	Paused,
+	Roaming,
+	Fighting,
+};
+UENUM(BlueprintType)
+enum PlayerAnimState
+{
+	Walk,
+	Idle,
+	Fight,
+};
+
 UCLASS()
 class ROOTGAME_API ARootCharacter : public ACharacter
 {
@@ -14,9 +29,16 @@ class ROOTGAME_API ARootCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ARootCharacter();
-
+	UFUNCTION(BlueprintImplementableEvent)
+		void EnterFight();
+	
 	FVector WishDir = FVector::ZeroVector;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TEnumAsByte<PlayerAnimState> AnimState{PlayerAnimState::Walk};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TEnumAsByte<PlayerGameState> PlayerGameState{PlayerGameState::Roaming};
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
