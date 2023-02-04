@@ -71,7 +71,7 @@ void ARootEnemy::LeaveFight()
 void ARootEnemy::AddInput(int in)
 {
 	InputArray.Emplace(in);
-	if(InputArray.Num() > 5)
+	if(InputArray.Num() > 2)
 	{
 		RemoveLastElement();
 	}
@@ -101,7 +101,8 @@ void ARootEnemy::SubmitPressed()
 	}
 	else
 	{
-	
+
+		ResetInput();
 		if(player)
 			player->Health -= Damage;
 		
