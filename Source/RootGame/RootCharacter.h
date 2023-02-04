@@ -35,6 +35,8 @@ public:
 		void LeavingFight();
 	
 	FVector WishDir = FVector::ZeroVector;
+	float ForwardAmount = 0.f;
+	float RotationAmount = 0.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<PlayerAnimState> AnimState{PlayerAnimState::Walk};

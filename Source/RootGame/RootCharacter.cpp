@@ -25,7 +25,9 @@ void ARootCharacter::Tick(float DeltaTime)
 
 	if(PlayerGameState == Roaming)
 	{
-		AddMovementInput(WishDir);
+		AddMovementInput(GetActorForwardVector() * ForwardAmount);
+		AddActorLocalRotation(FRotator(0.f, RotationAmount * DeltaTime * 100.f, 0.f));
+		
 	}
 	
 	EndTick(DeltaTime);
@@ -33,14 +35,18 @@ void ARootCharacter::Tick(float DeltaTime)
 
 void ARootCharacter::EndTick(float DeltaTime) {
 	WishDir = FVector::ZeroVector;
+	ForwardAmount = 0.f;
+	RotationAmount = 0.f;
 }
 
 void ARootCharacter::UpdateRightInput(float Value) {
 	WishDir += FVector::RightVector * Value;
+	RotationAmount = Value;
 }
 
 void ARootCharacter::UpdateForwardInput(float Value) {
 	WishDir += FVector::ForwardVector * Value;
+	ForwardAmount = Value;
 }
 
 // Called to bind functionality to input
