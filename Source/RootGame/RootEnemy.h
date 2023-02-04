@@ -83,6 +83,19 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Flee();
 	
+
+	UPROPERTY(EditAnywhere, Category="Sound")
+	USoundBase* DamageSound{false};
+	UPROPERTY(EditAnywhere, Category="Sound")
+	USoundBase* EnterCombatSound{false};
+	UPROPERTY(EditAnywhere, Category="Sound")
+	USoundBase* VictorySound{false};
+	UPROPERTY(EditAnywhere, Category="Sound")
+	USoundBase* LooseSound{false};
+	UPROPERTY(EditAnywhere, Category="Sound")
+	USoundBase* FleeSound{false};
+	
+	void PlaySound(USoundBase* sound);
 	UPROPERTY(EditAnywhere)
 	bool BDebugMessages{false};
 

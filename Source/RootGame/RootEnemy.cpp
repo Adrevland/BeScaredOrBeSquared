@@ -21,15 +21,16 @@ void ARootEnemy::BeginPlay()
 
 	TimeLeft = TimeSeconds;
 	SetRandQuestion();
+	PlaySound(EnterCombatSound);
 }
 
 // Called every frame
 void ARootEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+
 	TimeLeft -= DeltaTime;
-	if(TimeLeft < 0)
+	if (TimeLeft < 0)
 	{
 		TimeOut();
 	}
@@ -44,12 +45,11 @@ void ARootEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 void ARootEnemy::SetRandQuestion()
 {
 	TimeLeft = TimeSeconds;
-	int r = FMath::RandRange(0,Questions.Num()-1);
+	int r = FMath::RandRange(0, Questions.Num() - 1);
 	Question = Questions[r];
 	Answer = Answers[r];
-	
+
 	ResetInput();
-	
 }
 
 float ARootEnemy::CalcAnswer()
@@ -60,7 +60,7 @@ float ARootEnemy::CalcAnswer()
 void ARootEnemy::LeaveFight()
 {
 	auto player = Cast<ARootCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	if(player)
+	if (player)
 	{
 		player->PlayerGameState = PlayerGameState::Roaming;
 		player->Health = player->MaxHealth;
@@ -71,25 +71,25 @@ void ARootEnemy::LeaveFight()
 void ARootEnemy::AddInput(int in)
 {
 	InputArray.Emplace(in);
-	if(InputArray.Num() > 2)
+	if (InputArray.Num() > 2)
 	{
 		RemoveLastElement();
 	}
-	
+
 	calcInput();
 }
 
 void ARootEnemy::SubmitPressed()
 {
 	auto player = Cast<ARootCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	if(input == CalcAnswer())
+	if (input == CalcAnswer())
 	{
 		SetRandQuestion();
-		if(player)
-			player->XP += 1*XPMultiplayer;
-		
+		if (player)
+			player->XP += 1 * XPMultiplayer;
+
 		QuestionAnswered++;
-		if(QuestionAnswered < QuestionCount)
+		if (QuestionAnswered < QuestionCount)
 		{
 			SetRandQuestion();
 		}
@@ -101,14 +101,22 @@ void ARootEnemy::SubmitPressed()
 	}
 	else
 	{
-
 		ResetInput();
-		if(player)
-			player->Health -= Damage;
-		
-		if(player->Health <= 0 )
+		if (player)
 		{
-			player->XP -= 1*XPMultiplayer;
+			player->Health -= Damage;
+			PlaySound(DamageSound);
+		}
+
+
+		if (player->Health <= 0)
+		{
+			player->XP -= 1 * XPMultiplayer;
+			PlaySound(LooseSound);
+
+			player->XP -= 1 * XPMultiplayer;
+			player->SetActorLocation(player->EnterGrassLoc);
+
 			LeaveFight();
 			K2_DestroyActor();
 		}
@@ -128,17 +136,23 @@ void ARootEnemy::ResetInput()
 void ARootEnemy::TimeOut()
 {
 	auto player = Cast<ARootCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	if(player)
+	if (player)
 		player->Health -= Damage;
-	if(player->Health <= 0 )
+	PlaySound(DamageSound);
+	if (player->Health <= 0)
 	{
-		player->XP -= 1*XPMultiplayer;
+		PlaySound(LooseSound);
+		player->XP -= 1 * XPMultiplayer;
+
+		player->XP -= 1 * XPMultiplayer;
+		player->SetActorLocation(player->EnterGrassLoc);
+
 		LeaveFight();
 		K2_DestroyActor();
 	}
 	else
 	{
-		player->XP -= 0.5*XPMultiplayer;
+		player->XP -= 0.5 * XPMultiplayer;
 	}
 	TimeLeft = TimeSeconds;
 	SetRandQuestion();
@@ -156,7 +170,7 @@ void ARootEnemy::calcInput()
 		if (GEngine && BDebugMessages)
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, std::to_string(output).c_str());
 	}
-	
+
 	PrintArray();
 }
 
@@ -174,15 +188,24 @@ void ARootEnemy::PrintArray()
 
 void ARootEnemy::Flee()
 {
+	PlaySound(FleeSound);
 	auto player = Cast<ARootCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	if(player)
+	if (player)
 	{
-		player->XP -= 1*XPMultiplayer;
+		player->XP -= 1 * XPMultiplayer;
 		player->SetActorLocation(player->EnterGrassLoc);
 	}
-	
+
 	LeaveFight();
 	K2_DestroyActor();
+}
+
+void ARootEnemy::PlaySound(USoundBase* sound)
+{
+	if (sound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), sound, GetActorLocation(), GetActorRotation());
+	}
 }
 
 void ARootEnemy::RemoveLastElement()
