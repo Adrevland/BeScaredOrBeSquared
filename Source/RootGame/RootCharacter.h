@@ -56,5 +56,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int Health{100};
+	float Health{100.f};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxHealth{100.f};
 };

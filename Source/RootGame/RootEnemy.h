@@ -34,9 +34,12 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	int Number{1};
 	
-	void CalcAnswer();
+	float CalcAnswer();
 	//todo calculate answer
 	float Answer{0};
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	float Damage{10.f};
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	TArray<int> InputArray;

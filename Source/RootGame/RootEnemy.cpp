@@ -5,6 +5,9 @@
 
 #include <string>
 
+#include "RootCharacter.h"
+#include "Kismet/GameplayStatics.h"
+
 // Sets default values
 ARootEnemy::ARootEnemy()
 {
@@ -30,19 +33,35 @@ void ARootEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-void ARootEnemy::CalcAnswer()
+float ARootEnemy::CalcAnswer()
 {
+	return Answer;
 }
 
 void ARootEnemy::AddInput(int in)
 {
 	InputArray.Emplace(in);
+	if(InputArray.Num() > 5)
+	{
+		RemoveLastElement();
+	}
 	
 	calcInput();
 }
 
 void ARootEnemy::SubmitPressed()
 {
+	//todo check if answer is correct
+	if(input == CalcAnswer())
+	{
+		
+	}
+	else
+	{
+		auto player = Cast<ARootCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		if(player)
+			player->Health -= Damage;
+	}
 }
 
 void ARootEnemy::ResetInput()
