@@ -23,8 +23,11 @@ void ARootCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	AddMovementInput(WishDir);
-
+	if(PlayerGameState == Roaming)
+	{
+		AddMovementInput(WishDir);
+	}
+	
 	EndTick(DeltaTime);
 }
 

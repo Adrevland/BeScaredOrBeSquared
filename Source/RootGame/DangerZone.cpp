@@ -5,6 +5,7 @@
 #include "Components/BoxComponent.h"
 #include "DrawDebugHelpers.h"
 #include "RootCharacter.h"
+#include "RootEnemy.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -79,6 +80,12 @@ void ADangerZone::TrySpawn()
 			Player->EnterFight(); // triggers in BP
 			if (GEngine)
 				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("Player Entering Fight c++"));
+
+			auto type = EnemyTypes[FMath::RandRange(0,EnemyTypes.Num()-1)];
+			ActiveEnemy = GetWorld()->SpawnActor<ARootEnemy>(type,GetActorLocation(),GetActorRotation());
+			
+			GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(true);
+	
 		}
 	}
 }

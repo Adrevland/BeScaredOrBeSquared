@@ -48,8 +48,9 @@ public:
 	int DifficultyLevel{0};
 
 	UPROPERTY(EditAnywhere)
-	TArray<class ARootEnemy*> EnemyTypes;
+	TArray<TSubclassOf<class ARootEnemy>> EnemyTypes;
 
 	void TrySpawn();
 
+	class ARootEnemy* ActiveEnemy{nullptr};
 };
