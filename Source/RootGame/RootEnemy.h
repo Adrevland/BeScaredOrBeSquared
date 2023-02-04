@@ -27,14 +27,39 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString Question{"Insert Question?"};
 	
 	//sqrt of Question 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	int Number{1};
 	
 	void CalcAnswer();
 	//todo calculate answer
 	float Answer{0};
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	TArray<int> InputArray;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	int input;
+	
+	UFUNCTION(BlueprintCallable)
+	void AddInput(int i);
+	
+	UFUNCTION(BlueprintCallable)
+	void SubmitPressed();
+
+	UFUNCTION(BlueprintCallable)
+	void RemoveLastElement();
+	
+	UFUNCTION(BlueprintCallable)
+	void ResetInput();
+
+	void calcInput();
+
+	void PrintArray();
+	
+	UPROPERTY(EditAnywhere)
+	bool BDebugMessages{false};
+	
 };
