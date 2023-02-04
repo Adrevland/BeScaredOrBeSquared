@@ -3,6 +3,8 @@
 
 #include "RootCharacter.h"
 
+#include "GameFramework/SpringArmComponent.h"
+
 // Sets default values
 ARootCharacter::ARootCharacter()
 {
@@ -27,7 +29,8 @@ void ARootCharacter::Tick(float DeltaTime)
 	{
 		AddMovementInput(WishDir);
 	}
-	
+
+
 	EndTick(DeltaTime);
 }
 

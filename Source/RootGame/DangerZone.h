@@ -52,5 +52,7 @@ public:
 
 	void TrySpawn();
 
+	bool HasEnteredFight{false};
+	
 	class ARootEnemy* ActiveEnemy{nullptr};
 };

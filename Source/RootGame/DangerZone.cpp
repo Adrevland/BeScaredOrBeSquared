@@ -50,9 +50,7 @@ void ADangerZone::DrawZone()
 
 void ADangerZone::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Player Entering Danger Zone!"));
-
+	HasEnteredFight = false;
 	GetWorldTimerManager().SetTimer(timer, this, &ADangerZone::TrySpawn, spawnRate, true);
 	
 	auto player = Cast<ARootCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
@@ -63,12 +61,26 @@ void ADangerZone::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 
 void ADangerZone::OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("Player Outside Danger Zone!"));
-
 	GetWorldTimerManager().ClearTimer(timer);
 
 	InsideDangerZone = false;
+	if(!HasEnteredFight)
+	{
+		//random check for enemy
+		const int r = FMath::RandRange(0, SpawnChance);
+		if (r == 1)
+		{
+			Player->PlayerGameState = PlayerGameState::Fighting;
+			Player->EnterFight(); // triggers in BP
+
+			auto type = EnemyTypes[FMath::RandRange(0,EnemyTypes.Num()-1)];
+			ActiveEnemy = GetWorld()->SpawnActor<ARootEnemy>(type,GetActorLocation(),GetActorRotation());
+			
+			GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(true);
+
+			GetWorld()->GetTimerManager().ClearTimer(timer);
+		}
+	}
 }
 
 void ADangerZone::TrySpawn()
@@ -85,6 +97,7 @@ void ADangerZone::TrySpawn()
 		const int r = FMath::RandRange(0, SpawnChance);
 		if (r == 1)
 		{
+			HasEnteredFight = true;
 			Player->PlayerGameState = PlayerGameState::Fighting;
 			Player->EnterFight(); // triggers in BP
 
