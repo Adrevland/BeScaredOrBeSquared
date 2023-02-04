@@ -28,23 +28,36 @@ public:
 
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString Question{"Insert Question?"};
+	TArray<FString> Questions;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<int> Answers;
 	
 	//sqrt of Question 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	int Number{1};
-	
+	float Answer{0};
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	FString Question{"None Selected"};
+
+	void SetRandQuestion();
 	float CalcAnswer();
 	//todo calculate answer
-	float Answer{0};
 
+	void LeaveFight();
+	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	float Damage{10.f};
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	TArray<int> InputArray;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	int input;
+	int input{0};
+
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	int QuestionCount{1};
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	int QuestionAnswered{0};
 	
 	UFUNCTION(BlueprintCallable)
 	void AddInput(int i);
@@ -58,11 +71,19 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ResetInput();
 
+	UFUNCTION(BlueprintCallable)
+	void TimeOut();
+	
 	void calcInput();
 
 	void PrintArray();
 	
 	UPROPERTY(EditAnywhere)
 	bool BDebugMessages{false};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float TimeSeconds{5};
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float TimeLeft{0};
 };

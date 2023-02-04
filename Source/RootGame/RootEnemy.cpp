@@ -4,7 +4,6 @@
 #include "RootEnemy.h"
 
 #include <string>
-
 #include "RootCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -19,12 +18,21 @@ ARootEnemy::ARootEnemy()
 void ARootEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+
+	TimeLeft = TimeSeconds;
+	SetRandQuestion();
 }
 
 // Called every frame
 void ARootEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	TimeLeft -= DeltaTime;
+	if(TimeLeft < 0)
+	{
+		TimeOut();
+	}
 }
 
 // Called to bind functionality to input
@@ -33,9 +41,31 @@ void ARootEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+void ARootEnemy::SetRandQuestion()
+{
+	TimeLeft = TimeSeconds;
+	int r = FMath::RandRange(0,Questions.Num()-1);
+	Question = Questions[r];
+	Answer = Answers[r];
+	
+	ResetInput();
+	
+}
+
 float ARootEnemy::CalcAnswer()
 {
 	return Answer;
+}
+
+void ARootEnemy::LeaveFight()
+{
+	auto player = Cast<ARootCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if(player)
+	{
+		player->PlayerGameState = PlayerGameState::Roaming;
+		player->Health = player->MaxHealth;
+		player->LeavingFight();
+	}
 }
 
 void ARootEnemy::AddInput(int in)
@@ -52,15 +82,35 @@ void ARootEnemy::AddInput(int in)
 void ARootEnemy::SubmitPressed()
 {
 	//todo check if answer is correct
+	auto player = Cast<ARootCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if(input == CalcAnswer())
 	{
+		SetRandQuestion();
+		if(player)
+			player->XP += TimeLeft;
 		
+		QuestionAnswered++;
+		if(QuestionAnswered < QuestionCount)
+		{
+			SetRandQuestion();
+		}
+		else
+		{
+			LeaveFight();
+			K2_DestroyActor();
+		}
 	}
 	else
 	{
-		auto player = Cast<ARootCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	
 		if(player)
 			player->Health -= Damage;
+		
+		if(player->Health <= 0 )
+		{
+			LeaveFight();
+			K2_DestroyActor();
+		}
 	}
 }
 
@@ -72,6 +122,21 @@ void ARootEnemy::ResetInput()
 
 	if (GEngine && BDebugMessages)
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Input Reset"));
+}
+
+void ARootEnemy::TimeOut()
+{
+	auto player = Cast<ARootCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if(player)
+		player->Health -= Damage;
+	if(player->Health <= 0 )
+	{
+		LeaveFight();
+		K2_DestroyActor();
+	}
+	TimeLeft = TimeSeconds;
+	SetRandQuestion();
+	ResetInput();
 }
 
 void ARootEnemy::calcInput()

@@ -31,6 +31,8 @@ public:
 	ARootCharacter();
 	UFUNCTION(BlueprintImplementableEvent)
 		void EnterFight();
+	UFUNCTION(BlueprintImplementableEvent)
+		void LeavingFight();
 	
 	FVector WishDir = FVector::ZeroVector;
 
@@ -59,4 +61,8 @@ public:
 	float Health{100.f};
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxHealth{100.f};
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float XP{0.f};
+	
 };
