@@ -54,7 +54,10 @@ void ADangerZone::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Player Entering Danger Zone!"));
 
 	GetWorldTimerManager().SetTimer(timer, this, &ADangerZone::TrySpawn, spawnRate, true);
-
+	
+	auto player = Cast<ARootCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if(player)
+		player->EnterGrassLoc = player->GetActorLocation();
 	InsideDangerZone = true;
 }
 

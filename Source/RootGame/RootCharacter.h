@@ -54,6 +54,8 @@ public:
 	void UpdateRightInput(float Value);
 	void UpdateForwardInput(float Value);
 
+	FVector EnterGrassLoc{0};
+	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 

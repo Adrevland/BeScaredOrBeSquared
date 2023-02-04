@@ -173,6 +173,13 @@ void ARootEnemy::PrintArray()
 
 void ARootEnemy::Flee()
 {
+	auto player = Cast<ARootCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if(player)
+	{
+		player->XP -= 1*XPMultiplayer;
+		player->SetActorLocation(player->EnterGrassLoc);
+	}
+	
 	LeaveFight();
 	K2_DestroyActor();
 }
