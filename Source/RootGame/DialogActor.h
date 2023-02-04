@@ -24,6 +24,10 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void DisplayDialog();
 
+	class ARootCharacter* OverlappedPlayer = nullptr;
+
+	virtual void Destroyed() override;
+
 
 protected:
 	// Called when the game starts or when spawned

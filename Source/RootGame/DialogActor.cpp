@@ -18,6 +18,15 @@ ADialogActor::ADialogActor()
 	DialogTrigger->SetGenerateOverlapEvents(true);
 }
 
+void ADialogActor::Destroyed() {
+	Super::Destroyed();
+	UE_LOG(LogTemp, Warning, TEXT("DialogActor Destroyed"));
+	if (OverlappedPlayer != nullptr && OverlappedPlayer->PlayerGameState == PlayerGameState::Paused) {
+		OverlappedPlayer->PlayerGameState = PlayerGameState::Roaming;
+		UE_LOG(LogTemp, Warning, TEXT("Player state set to Roaming from Dialog actor destroyed"));
+	}
+}
+
 // Called when the game starts or when spawned
 void ADialogActor::BeginPlay()
 {
@@ -29,6 +38,10 @@ void ADialogActor::BeginPlay()
 void ADialogActor::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
 	if (ARootCharacter* Player = Cast<ARootCharacter>(OtherActor)) {
+		UE_LOG(LogTemp, Warning, TEXT("Player overlapping with dialog actor. Setting player state to Paused."));
+		OverlappedPlayer = Player;
+		Player->PlayerGameState = PlayerGameState::Paused;
+		GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(true);
 		DisplayDialog();
 	}
 }

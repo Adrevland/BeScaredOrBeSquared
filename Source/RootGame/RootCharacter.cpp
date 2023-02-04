@@ -15,7 +15,7 @@ ARootCharacter::ARootCharacter()
 void ARootCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(true);
 }
 
 // Called every frame
