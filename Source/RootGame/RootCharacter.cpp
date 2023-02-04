@@ -3,6 +3,8 @@
 
 #include "RootCharacter.h"
 
+#include "GameFramework/SpringArmComponent.h"
+
 // Sets default values
 ARootCharacter::ARootCharacter()
 {
@@ -29,7 +31,8 @@ void ARootCharacter::Tick(float DeltaTime)
 		AddActorLocalRotation(FRotator(0.f, RotationAmount * DeltaTime * 100.f, 0.f));
 		
 	}
-	
+
+
 	EndTick(DeltaTime);
 }
 
