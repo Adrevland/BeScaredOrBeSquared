@@ -81,13 +81,12 @@ void ARootEnemy::AddInput(int in)
 
 void ARootEnemy::SubmitPressed()
 {
-	//todo check if answer is correct
 	auto player = Cast<ARootCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if(input == CalcAnswer())
 	{
 		SetRandQuestion();
 		if(player)
-			player->XP += TimeLeft;
+			player->XP += 1*XPMultiplayer;
 		
 		QuestionAnswered++;
 		if(QuestionAnswered < QuestionCount)
@@ -108,6 +107,7 @@ void ARootEnemy::SubmitPressed()
 		
 		if(player->Health <= 0 )
 		{
+			player->XP -= 1*XPMultiplayer;
 			LeaveFight();
 			K2_DestroyActor();
 		}
@@ -131,8 +131,13 @@ void ARootEnemy::TimeOut()
 		player->Health -= Damage;
 	if(player->Health <= 0 )
 	{
+		player->XP -= 1*XPMultiplayer;
 		LeaveFight();
 		K2_DestroyActor();
+	}
+	else
+	{
+		player->XP -= 0.5*XPMultiplayer;
 	}
 	TimeLeft = TimeSeconds;
 	SetRandQuestion();
@@ -164,6 +169,12 @@ void ARootEnemy::PrintArray()
 
 	if (GEngine && BDebugMessages)
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, output.c_str());
+}
+
+void ARootEnemy::Flee()
+{
+	LeaveFight();
+	K2_DestroyActor();
 }
 
 void ARootEnemy::RemoveLastElement()

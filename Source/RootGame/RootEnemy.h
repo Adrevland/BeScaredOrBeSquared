@@ -46,6 +46,8 @@ public:
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	float Damage{10.f};
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	float XPMultiplayer{10.f};
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	TArray<int> InputArray;
@@ -77,6 +79,9 @@ public:
 	void calcInput();
 
 	void PrintArray();
+
+	UFUNCTION(BlueprintCallable)
+	void Flee();
 	
 	UPROPERTY(EditAnywhere)
 	bool BDebugMessages{false};

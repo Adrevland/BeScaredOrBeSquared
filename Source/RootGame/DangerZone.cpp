@@ -70,6 +70,12 @@ void ADangerZone::OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* Othe
 
 void ADangerZone::TrySpawn()
 {
+	if(EnemyTypes.Num() < 1)
+	{
+		if (GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Missing Enemy Type in DangerZone"));
+		return;
+	}
 	if (Player && Player->PlayerGameState == PlayerGameState::Roaming)
 	{
 		//random check for enemy
@@ -78,8 +84,6 @@ void ADangerZone::TrySpawn()
 		{
 			Player->PlayerGameState = PlayerGameState::Fighting;
 			Player->EnterFight(); // triggers in BP
-			if (GEngine)
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT("Player Entering Fight c++"));
 
 			auto type = EnemyTypes[FMath::RandRange(0,EnemyTypes.Num()-1)];
 			ActiveEnemy = GetWorld()->SpawnActor<ARootEnemy>(type,GetActorLocation(),GetActorRotation());
