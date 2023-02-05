@@ -37,12 +37,17 @@ void ADialogActor::BeginPlay()
 
 void ADialogActor::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
+	if (UsedDialog == true) {
+		return;
+	}
+
 	if (ARootCharacter* Player = Cast<ARootCharacter>(OtherActor)) {
 		UE_LOG(LogTemp, Warning, TEXT("Player overlapping with dialog actor. Setting player state to Paused."));
 		OverlappedPlayer = Player;
 		Player->PlayerGameState = PlayerGameState::Paused;
 		GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(true);
 		DisplayDialog();
+		UsedDialog = true;
 	}
 }
 
