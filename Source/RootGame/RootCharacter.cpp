@@ -44,7 +44,11 @@ void ARootCharacter::Tick(float DeltaTime)
 	{
 		AnimState = PlayerAnimState::Fight;
 	}
-	
+	if(LastGameState != PlayerGameState)
+	{
+		NewStateEvent();
+		LastGameState = PlayerGameState;
+	}
 	Level = XP/10.f;
 	EndTick(DeltaTime);
 }

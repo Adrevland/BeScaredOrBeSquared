@@ -52,14 +52,24 @@ void ADangerZone::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 {
 	if(!Cast<ARootCharacter>(OtherActor))
 		return;
-	
-	HasEnteredFight = false;
-	GetWorldTimerManager().SetTimer(timer, this, &ADangerZone::TrySpawn, spawnRate, true);
-	
+
 	auto player = Cast<ARootCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if(player)
 		player->EnterGrassLoc = player->GetActorLocation();
 	InsideDangerZone = true;
+	
+	if(Boss && !Player->BossKilled && player->PlayerGameState != PlayerGameState::Fighting)
+	{
+		auto type = EnemyTypes[FMath::RandRange(0,EnemyTypes.Num()-1)];
+		ActiveEnemy = GetWorld()->SpawnActor<ARootEnemy>(type,GetActorLocation(),GetActorRotation());
+		InsideDangerZone = true;
+		HasEnteredFight = true;
+		Player->PlayerGameState = PlayerGameState::Fighting;
+		Player->EnterFight(); // triggers in BP
+		return;
+	}
+	HasEnteredFight = false;
+	GetWorldTimerManager().SetTimer(timer, this, &ADangerZone::TrySpawn, spawnRate, true);
 }
 
 void ADangerZone::OnEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)

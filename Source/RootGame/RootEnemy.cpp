@@ -101,6 +101,8 @@ void ARootEnemy::SubmitPressed()
 		}
 		else
 		{
+			if(BBoss)
+				player->BossKilled = true;
 			LeaveFight();
 			K2_DestroyActor();
 		}

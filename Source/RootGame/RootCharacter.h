@@ -38,11 +38,15 @@ public:
 	FVector WishDir = FVector::ZeroVector;
 	float ForwardAmount = 0.f;
 	float RotationAmount = 0.f;
-
+	TEnumAsByte<PlayerGameState> LastGameState{PlayerGameState::Paused};
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<PlayerAnimState> AnimState{PlayerAnimState::Walk};
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<PlayerGameState> PlayerGameState{PlayerGameState::Roaming};
+	
+	
+	
 
 protected:
 	// Called when the game starts or when spawned
@@ -59,6 +63,8 @@ public:
 
 	FVector EnterGrassLoc{0};
 
+	bool BossKilled = false;
+	
 	FTimerHandle combatTimer;
 	bool CanEnterCombat{true};
 
@@ -86,6 +92,9 @@ public:
 	void TwerkStart();
 	void TwerkEnd();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void NewStateEvent();
+	
 	UFUNCTION(BlueprintImplementableEvent)
 	void TwerkEventStart();
 	UFUNCTION(BlueprintImplementableEvent)

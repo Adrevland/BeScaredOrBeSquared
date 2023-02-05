@@ -48,6 +48,11 @@ public:
 	int DifficultyLevel{0};
 
 	UPROPERTY(EditAnywhere)
+	bool Boss{false};
+
+	bool BossKilled{false};
+	
+	UPROPERTY(EditAnywhere)
 	TArray<TSubclassOf<class ARootEnemy>> EnemyTypes;
 
 	void TrySpawn();

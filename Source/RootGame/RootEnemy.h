@@ -82,6 +82,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Flee();
+
 	
 
 	UPROPERTY(EditAnywhere, Category="Sound")
@@ -98,7 +99,10 @@ public:
 	void PlaySound(USoundBase* sound);
 	UPROPERTY(EditAnywhere)
 	bool BDebugMessages{false};
-
+	
+	UPROPERTY(EditAnywhere)
+	bool BBoss{false};
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float TimeSeconds{5};
 	
