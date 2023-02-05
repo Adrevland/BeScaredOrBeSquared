@@ -13,6 +13,7 @@ enum PlayerGameState
 	Roaming,
 	Fighting,
 };
+
 UENUM(BlueprintType)
 enum PlayerAnimState
 {
@@ -30,10 +31,10 @@ public:
 	// Sets default values for this character's properties
 	ARootCharacter();
 	UFUNCTION(BlueprintImplementableEvent)
-		void EnterFight();
+	void EnterFight();
 	UFUNCTION(BlueprintImplementableEvent)
-		void LeavingFight();
-	
+	void LeavingFight();
+
 	FVector WishDir = FVector::ZeroVector;
 	float ForwardAmount = 0.f;
 	float RotationAmount = 0.f;
@@ -42,12 +43,12 @@ public:
 	TEnumAsByte<PlayerAnimState> AnimState{PlayerAnimState::Walk};
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<PlayerGameState> PlayerGameState{PlayerGameState::Roaming};
-	
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -57,7 +58,16 @@ public:
 	void UpdateForwardInput(float Value);
 
 	FVector EnterGrassLoc{0};
-	
+
+	FTimerHandle combatTimer;
+	bool CanEnterCombat{true};
+
+	void EnableEnterCombat()
+	{
+		CanEnterCombat = true;
+		GetWorldTimerManager().ClearTimer(combatTimer);
+	}
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -65,8 +75,7 @@ public:
 	float Health{100.f};
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxHealth{100.f};
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float XP{0.f};
-	
 };

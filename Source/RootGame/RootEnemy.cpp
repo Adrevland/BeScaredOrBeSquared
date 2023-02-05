@@ -20,6 +20,11 @@ void ARootEnemy::BeginPlay()
 	Super::BeginPlay();
 
 	TimeLeft = TimeSeconds;
+	auto player = Cast<ARootCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (player)
+	{
+		player->Health = player->MaxHealth;
+	}
 	SetRandQuestion();
 	PlaySound(EnterCombatSound);
 }
@@ -64,6 +69,7 @@ void ARootEnemy::LeaveFight()
 	{
 		player->PlayerGameState = PlayerGameState::Roaming;
 		player->Health = player->MaxHealth;
+		GetWorldTimerManager().SetTimer(player->combatTimer, player, &ARootCharacter::EnableEnterCombat, 1, false);
 		player->LeavingFight();
 	}
 }
