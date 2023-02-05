@@ -66,6 +66,7 @@ void ADangerZone::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* Ot
 		HasEnteredFight = true;
 		Player->PlayerGameState = PlayerGameState::Fighting;
 		Player->EnterFight(); // triggers in BP
+		K2_DestroyActor();
 		return;
 	}
 	HasEnteredFight = false;
