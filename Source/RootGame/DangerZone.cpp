@@ -91,7 +91,7 @@ void ADangerZone::TrySpawn()
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Missing Enemy Type in DangerZone"));
 		return;
 	}
-	if (Player && Player->PlayerGameState == PlayerGameState::Roaming)
+	if (Player && Player->PlayerGameState == PlayerGameState::Roaming && Player->CanEnterCombat)
 	{
 		//random check for enemy
 		const int r = FMath::RandRange(0, SpawnChance);
@@ -105,7 +105,7 @@ void ADangerZone::TrySpawn()
 			ActiveEnemy = GetWorld()->SpawnActor<ARootEnemy>(type,GetActorLocation(),GetActorRotation());
 			
 			GetWorld()->GetFirstPlayerController()->SetShowMouseCursor(true);
-	
+			Player->CanEnterCombat = false;
 		}
 	}
 }
