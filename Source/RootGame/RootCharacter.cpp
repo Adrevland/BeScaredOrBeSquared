@@ -25,14 +25,31 @@ void ARootCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if(PlayerGameState == Roaming)
+	if(PlayerGameState == Roaming && !Twerk)
 	{
 		AddMovementInput(GetActorForwardVector() * ForwardAmount);
 		AddActorLocalRotation(FRotator(0.f, RotationAmount * DeltaTime * 100.f, 0.f));
 		
 	}
-
-
+	auto speed = GetVelocity().Length();
+	if(speed <= 0 && !Twerk)
+	{
+		AnimState = PlayerAnimState::Idle;
+	}
+	if(speed > 0 && !Twerk)
+	{
+		AnimState = PlayerAnimState::Walk;
+	}
+	if(Twerk)
+	{
+		AnimState = PlayerAnimState::Fight;
+	}
+	if(LastGameState != PlayerGameState)
+	{
+		NewStateEvent();
+		LastGameState = PlayerGameState;
+	}
+	Level = XP/10.f;
 	EndTick(DeltaTime);
 }
 
@@ -59,5 +76,23 @@ void ARootCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAxis(TEXT("Forward"), this, &ARootCharacter::UpdateForwardInput);
 	PlayerInputComponent->BindAxis(TEXT("Right"), this, &ARootCharacter::UpdateRightInput);
+	PlayerInputComponent->BindAction(TEXT("Jump"),IE_Released, this, &ARootCharacter::TwerkEnd);
+	PlayerInputComponent->BindAction(TEXT("Jump"),IE_Pressed, this, &ARootCharacter::TwerkStart);
+}
+
+void ARootCharacter::TwerkStart()
+{
+	if(PlayerGameState != Roaming)
+		return;
+	Twerk = true;
+	TwerkEventStart();
+}
+
+void ARootCharacter::TwerkEnd()
+{
+	if(PlayerGameState != Roaming)
+		return;
+	Twerk = false;
+	TwerkEventStop();
 }
 

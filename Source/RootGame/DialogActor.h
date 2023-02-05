@@ -28,6 +28,8 @@ public:
 
 	virtual void Destroyed() override;
 
+	bool UsedDialog = false;
+
 
 protected:
 	// Called when the game starts or when spawned
