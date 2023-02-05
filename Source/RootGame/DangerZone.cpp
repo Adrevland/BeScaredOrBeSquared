@@ -50,6 +50,9 @@ void ADangerZone::DrawZone()
 
 void ADangerZone::OnBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if(!Cast<ARootCharacter>(OtherActor))
+		return;
+	
 	HasEnteredFight = false;
 	GetWorldTimerManager().SetTimer(timer, this, &ADangerZone::TrySpawn, spawnRate, true);
 	
