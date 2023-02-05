@@ -3,7 +3,6 @@
 
 #include "RootCharacter.h"
 
-#include "../../../../../../../../../Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.29.30133/INCLUDE/string"
 #include "GameFramework/SpringArmComponent.h"
 
 // Sets default values
