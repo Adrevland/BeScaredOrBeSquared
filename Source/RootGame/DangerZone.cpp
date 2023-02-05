@@ -35,7 +35,7 @@ void ADangerZone::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	DrawZone();
+	//DrawZone();
 
 
 	if (InsideDangerZone && Player && Player->PlayerGameState == PlayerGameState::Roaming)
@@ -100,6 +100,7 @@ void ADangerZone::TrySpawn()
 		const int r = FMath::RandRange(0, SpawnChance);
 		if (r == 1)
 		{
+			GetWorld()->GetTimerManager().ClearTimer(timer);
 			HasEnteredFight = true;
 			Player->PlayerGameState = PlayerGameState::Fighting;
 			Player->EnterFight(); // triggers in BP

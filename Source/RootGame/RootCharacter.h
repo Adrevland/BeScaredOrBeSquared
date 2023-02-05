@@ -62,6 +62,8 @@ public:
 	FTimerHandle combatTimer;
 	bool CanEnterCombat{true};
 
+	bool Twerk{false};
+	
 	void EnableEnterCombat()
 	{
 		CanEnterCombat = true;
@@ -78,4 +80,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float XP{0.f};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Level{0};
+	void TwerkStart();
+	void TwerkEnd();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void TwerkEventStart();
+	UFUNCTION(BlueprintImplementableEvent)
+	void TwerkEventStop();
+	
 };

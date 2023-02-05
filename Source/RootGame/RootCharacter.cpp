@@ -3,6 +3,7 @@
 
 #include "RootCharacter.h"
 
+#include "../../../../../../../../../Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.29.30133/INCLUDE/string"
 #include "GameFramework/SpringArmComponent.h"
 
 // Sets default values
@@ -25,14 +26,27 @@ void ARootCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if(PlayerGameState == Roaming)
+	if(PlayerGameState == Roaming && !Twerk)
 	{
 		AddMovementInput(GetActorForwardVector() * ForwardAmount);
 		AddActorLocalRotation(FRotator(0.f, RotationAmount * DeltaTime * 100.f, 0.f));
 		
 	}
-
-
+	auto speed = GetVelocity().Length();
+	if(speed <= 0 && !Twerk)
+	{
+		AnimState = PlayerAnimState::Idle;
+	}
+	if(speed > 0 && !Twerk)
+	{
+		AnimState = PlayerAnimState::Walk;
+	}
+	if(Twerk)
+	{
+		AnimState = PlayerAnimState::Fight;
+	}
+	
+	Level = XP/10.f;
 	EndTick(DeltaTime);
 }
 
@@ -59,5 +73,23 @@ void ARootCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAxis(TEXT("Forward"), this, &ARootCharacter::UpdateForwardInput);
 	PlayerInputComponent->BindAxis(TEXT("Right"), this, &ARootCharacter::UpdateRightInput);
+	PlayerInputComponent->BindAction(TEXT("Jump"),IE_Released, this, &ARootCharacter::TwerkEnd);
+	PlayerInputComponent->BindAction(TEXT("Jump"),IE_Pressed, this, &ARootCharacter::TwerkStart);
+}
+
+void ARootCharacter::TwerkStart()
+{
+	if(PlayerGameState != Roaming)
+		return;
+	Twerk = true;
+	TwerkEventStart();
+}
+
+void ARootCharacter::TwerkEnd()
+{
+	if(PlayerGameState != Roaming)
+		return;
+	Twerk = false;
+	TwerkEventStop();
 }
 

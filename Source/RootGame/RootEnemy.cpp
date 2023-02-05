@@ -69,7 +69,7 @@ void ARootEnemy::LeaveFight()
 	{
 		player->PlayerGameState = PlayerGameState::Roaming;
 		player->Health = player->MaxHealth;
-		GetWorldTimerManager().SetTimer(player->combatTimer, player, &ARootCharacter::EnableEnterCombat, 1, false);
+		GetWorldTimerManager().SetTimer(player->combatTimer, player, &ARootCharacter::EnableEnterCombat, 2, false);
 		player->LeavingFight();
 	}
 }
@@ -112,6 +112,7 @@ void ARootEnemy::SubmitPressed()
 		{
 			player->Health -= Damage;
 			PlaySound(DamageSound);
+			player->XP -= 0.5 * XPMultiplayer;
 		}
 
 
@@ -119,8 +120,7 @@ void ARootEnemy::SubmitPressed()
 		{
 			player->XP -= 1 * XPMultiplayer;
 			PlaySound(LooseSound);
-
-			player->XP -= 1 * XPMultiplayer;
+			
 			player->SetActorLocation(player->EnterGrassLoc);
 
 			LeaveFight();
@@ -145,12 +145,12 @@ void ARootEnemy::TimeOut()
 	if (player)
 		player->Health -= Damage;
 	PlaySound(DamageSound);
+	player->XP -= 0.5 * XPMultiplayer;
 	if (player->Health <= 0)
 	{
 		PlaySound(LooseSound);
 		player->XP -= 1 * XPMultiplayer;
 
-		player->XP -= 1 * XPMultiplayer;
 		player->SetActorLocation(player->EnterGrassLoc);
 
 		LeaveFight();
